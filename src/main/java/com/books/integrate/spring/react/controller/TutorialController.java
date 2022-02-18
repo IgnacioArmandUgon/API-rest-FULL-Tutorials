@@ -1,22 +1,12 @@
 package com.books.integrate.spring.react.controller;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import com.books.integrate.spring.react.model.Tutorial;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMessage;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 
 import com.books.integrate.spring.react.repository.TutorialRepository;
 
@@ -31,6 +21,8 @@ public class TutorialController {
 	@GetMapping("/tutorials")
 	public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title) {
 		try {
+
+			System.out.println("entro");
 			List<Tutorial> tutorials = new ArrayList<Tutorial>();
 
 			if (title == null)
@@ -39,11 +31,14 @@ public class TutorialController {
 				tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
 
 			if (tutorials.isEmpty()) {
+				System.out.println("vacio");
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 
 			return new ResponseEntity<>(tutorials, HttpStatus.OK);
 		} catch (Exception e) {
+			System.out.println("error");
+			System.out.println(e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -64,7 +59,7 @@ public class TutorialController {
 	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
 		try {
 			Tutorial _tutorial = tutorialRepository
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(),  false));
+					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), /*tutorial.getPrice(),*/  false));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -117,6 +112,18 @@ public class TutorialController {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
 			return new ResponseEntity<>(tutorials, HttpStatus.OK);
+		} catch (Exception e) {
+
+			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+		}
+	}
+
+	@DeleteMapping("/tutorials/borrar/{title}")
+	public ResponseEntity<String> deleteByTitle(@PathVariable("title") String title) {
+		List<Tutorial> tutorials = tutorialRepository.findByTitleContaining(title);
+		try {
+			tutorials.forEach(tutorial -> tutorialRepository.deleteById(tutorial.getId()));
+			return new ResponseEntity<>("Tutorial Eliminao papa!!!! ",HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 		}
