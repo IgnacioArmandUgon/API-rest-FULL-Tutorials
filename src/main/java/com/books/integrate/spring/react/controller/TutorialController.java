@@ -118,7 +118,12 @@ public class TutorialController {
 		}
 	}
 
-	@DeleteMapping("/tutorials/borrar/{title}")
+	/**
+	 * Este metodo toma un titulo dado y borra la entidad con ese titulo
+	 * @param title
+	 * @return
+	 */
+		@DeleteMapping("/tutorials/borrar/{title}")
 	public ResponseEntity<String> deleteByTitle(@PathVariable("title") String title) {
 		List<Tutorial> tutorials = tutorialRepository.findByTitleContaining(title);
 		try {
@@ -129,6 +134,12 @@ public class TutorialController {
 		}
 	}
 
+	/**
+	 * Este metodo toma un titulo dado y modifica la entidad con ese titulo
+	 * @param title
+	 * @param tutorial
+	 * @return
+	 */
 	@PutMapping("/tutorials/updateByTitle/{title}")
 	public ResponseEntity<Tutorial> updateByTitle(@PathVariable("title") String title, @RequestBody Tutorial tutorial) {
 		List<Tutorial> tutorialsByTitleData = tutorialRepository.findByTitleContaining(title);
@@ -149,6 +160,11 @@ public class TutorialController {
 		}
 	}
 
+	/**
+	 * Este metodo toma un id dado y devuelve el precio de la entidad con dicho id
+	 * @param id
+	 * @return
+	 */
 	@GetMapping("/tutorials/price/{id}")
 	public Long getPriceById(@PathVariable("id") Long id){
 		Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
