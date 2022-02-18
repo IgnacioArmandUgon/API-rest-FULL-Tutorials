@@ -59,7 +59,7 @@ public class TutorialController {
 	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
 		try {
 			Tutorial _tutorial = tutorialRepository
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), /*tutorial.getPrice(),*/  false));
+					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), tutorial.getPrice(),  false));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -130,7 +130,7 @@ public class TutorialController {
 	}
 
 	@PutMapping("/tutorials/updateByTitle/{title}")
-	public ResponseEntity<Tutorial> updateTutorialByTitle(@PathVariable("title") String title, @RequestBody Tutorial tutorial) {
+	public ResponseEntity<Tutorial> updateByTitle(@PathVariable("title") String title, @RequestBody Tutorial tutorial) {
 		List<Tutorial> tutorialsByTitleData = tutorialRepository.findByTitleContaining(title);
 		try {
 			if (tutorialsByTitleData.size()> 0) {
@@ -146,6 +146,16 @@ public class TutorialController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch(Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/tutorials/price/{id}")
+	public Long getPriceById(@PathVariable("id") Long id){
+		Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
+		if (tutorialData.isPresent()) {
+			return tutorialData.get().getPrice();
+		} else {
+			return 0L;
 		}
 	}
 

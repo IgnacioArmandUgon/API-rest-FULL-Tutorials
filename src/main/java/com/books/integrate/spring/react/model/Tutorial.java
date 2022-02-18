@@ -19,17 +19,17 @@ public class Tutorial {
 	@Column(name = "published")
 	private boolean published;
 
-	/*@Column(name = "price")
-	private int price;*/
+	@Column(name = "price")
+	private Long price;
 
 	public Tutorial() {
 
 	}
 
-	public Tutorial(String title, String description, /*int price,*/ boolean published) {
+	public Tutorial(String title, String description, Long price, boolean published) {
 		this.title = title;
 		this.description = description;
-		/*this.price = price;*/
+		this.price = price;
 		this.published = published;
 	}
 
@@ -53,9 +53,9 @@ public class Tutorial {
 		this.description = description;
 	}
 
-	/*public int getPrice() {return price;}
+	public Long getPrice() {return price;}
 
-	public void setPrice(int price) {this.price = price;}*/
+	public void setPrice(Long price) {this.price = price;}
 
 	public boolean isPublished() {return published;}
 
