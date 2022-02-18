@@ -129,4 +129,24 @@ public class TutorialController {
 		}
 	}
 
+	@PutMapping("/tutorials/updateByTitle/{title}")
+	public ResponseEntity<Tutorial> updateTutorialByTitle(@PathVariable("title") String title, @RequestBody Tutorial tutorial) {
+		List<Tutorial> tutorialsByTitleData = tutorialRepository.findByTitleContaining(title);
+		try {
+			if (tutorialsByTitleData.size()> 0) {
+				for(Tutorial tutorials : tutorialsByTitleData){
+					tutorials.setTitle(tutorial.getTitle());
+					tutorials.setDescription(tutorial.getDescription());
+					tutorials.setPublished(tutorial.isPublished());
+					/*tutorials.setPrice(tutorial.getPrice());*/
+					tutorialRepository.save(tutorials);
+				}
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} catch(Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
